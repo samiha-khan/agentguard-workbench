@@ -189,6 +189,8 @@ article p {
 }
 .pill {
   border-radius: 999px;
+  min-width: 88px;
+  text-align: center;
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.08em;

@@ -1,8 +1,14 @@
 # AgentGuard Workbench
 
+[![CI](https://github.com/samiha-khan/agentguard-workbench/actions/workflows/ci.yml/badge.svg)](https://github.com/samiha-khan/agentguard-workbench/actions/workflows/ci.yml)
+
 AgentGuard reviews code changes produced with coding agents. It takes a task, its acceptance criteria, a Git diff, and the test result, then returns one of three outcomes: `PASS`, `REVIEW`, or `BLOCKED`.
 
 I built it to explore a question I kept running into while using coding agents: once an agent finishes a change, what evidence should I check before accepting it? The first version focuses on checks that are predictable and easy to audit instead of asking another model to judge the code.
+
+![AgentGuard Workbench showing a BLOCKED verdict with its findings and run history](docs/screenshot.png)
+
+A change that adds a hard-coded key and edits a migration is blocked. Each finding and score deduction is listed, and every run is saved.
 
 ## How it works
 

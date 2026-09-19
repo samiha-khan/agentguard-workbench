@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: agentguard-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/evaluations
+    envVars:
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xmx350m -XX:+UseSerialGC

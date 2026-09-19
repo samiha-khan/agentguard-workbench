@@ -95,11 +95,20 @@ mvn verify
 cd frontend && npm test && npm run build
 ```
 
-Backend (22 tests): every guardrail rule and its edge cases (removed lines are not flagged as added secrets, deleted protected files are caught, a test file is recognized by its path and not by the word "test"), the PASS / REVIEW / BLOCKED verdicts and scores, saving a run and reading it back, the 404 for an unknown run, and request validation.
+Backend (24 tests): every guardrail rule and its edge cases (removed lines are not flagged as added secrets, deleted protected files are caught, a test file is recognized by its path and not by the word "test"), the PASS / REVIEW / BLOCKED verdicts and scores, saving a run and reading it back, the 404 for an unknown run, request validation, and the CORS allow-list.
 
 Frontend (8 tests): the scorecard, the history list, a full submit-and-refresh flow, and the error paths for an unreachable or rejecting API.
 
 The frontend reads its API address from `VITE_API_URL` and defaults to `http://localhost:8080`.
+
+## Deploy a live demo
+
+The API runs anywhere that can run the `Dockerfile`, and the frontend is a static Vite build.
+
+1. **API on Render:** choose New, then Blueprint, and select this repository. `render.yaml` creates a free Docker web service. When prompted, set `ALLOWED_ORIGINS` to the frontend's URL (separate several with commas).
+2. **Frontend on Vercel:** import the repository, set the Root Directory to `frontend`, and add the environment variable `VITE_API_URL` with the API's URL. Vercel detects `npm run build` and the `dist` output on its own.
+
+The default H2 database lives in memory, so demo data resets whenever the service restarts. Set `DATABASE_URL`, `DATABASE_USER`, and `DATABASE_PASSWORD` to point at MySQL for persistence. Free instances sleep when idle, so the first request after a pause can take up to a minute. Run history is visible to everyone who opens the demo, so do not paste private code into it.
 
 ## Decisions and limitations
 

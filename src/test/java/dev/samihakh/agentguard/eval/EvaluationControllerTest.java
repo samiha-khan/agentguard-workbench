@@ -87,6 +87,19 @@ class EvaluationControllerTest {
     }
 
     @Test
+    void allowsRequestsFromTheConfiguredFrontendOrigin() throws Exception {
+        mockMvc.perform(get("/api/evaluations").header("Origin", "http://localhost:5173"))
+            .andExpect(status().isOk())
+            .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"));
+    }
+
+    @Test
+    void rejectsRequestsFromOtherOrigins() throws Exception {
+        mockMvc.perform(get("/api/evaluations").header("Origin", "https://other.example"))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
     void rejectsADiffOverTheSizeLimit() throws Exception {
         submit("Title", "Render progress", "+".repeat(20001), true).andExpect(status().isBadRequest());
     }

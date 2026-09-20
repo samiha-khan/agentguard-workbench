@@ -51,3 +51,20 @@ describe("HistoryPanel", () => {
     expect(screen.queryByText(/No runs yet/)).toBeNull();
   });
 });
+
+describe("Scorecard details", () => {
+  it("lists blockers first and colors the evaluated diff", () => {
+    const shuffled = { ...blocked, findings: [blocked.findings[1], blocked.findings[0]] };
+    const { container } = render(<Scorecard evaluation={shuffled} diff={"--- a/x\n+++ b/x\n+added\n-removed"} />);
+    const rules = [...container.querySelectorAll("article h3")].map((heading) => heading.textContent);
+    expect(rules).toEqual(["secret-scan", "test-gate"]);
+    expect(container.querySelectorAll(".diff-add").length).toBe(1);
+    expect(container.querySelectorAll(".diff-del").length).toBe(1);
+    expect(container.querySelectorAll(".diff-file").length).toBe(2);
+  });
+
+  it("omits the diff section when no diff is available", () => {
+    render(<Scorecard evaluation={blocked} diff={null} />);
+    expect(screen.queryByText("Evaluated diff")).toBeNull();
+  });
+});

@@ -77,4 +77,29 @@ describe("App", () => {
 
     expect(await screen.findByText("Run #3", { exact: false })).toBeTruthy();
   });
+
+  it("puts an example into the form", async () => {
+    vi.stubGlobal("fetch", vi.fn(() => json([])));
+
+    render(<App />);
+    await screen.findByText(/No runs yet/);
+    fireEvent.click(screen.getByRole("button", { name: "Leaked key" }));
+
+    expect((screen.getByLabelText(/Agent diff/) as HTMLTextAreaElement).value).toContain("api_key");
+  });
+
+  it("sends the failing-tests example with the tests unchecked", async () => {
+    const fetchMock = vi.fn((_url: string, init?: RequestInit) =>
+      init?.method === "POST" ? json(evaluation, 201) : json([]));
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    await screen.findByText(/No runs yet/);
+    fireEvent.click(screen.getByRole("button", { name: "Failing tests" }));
+    fireEvent.click(screen.getByRole("button", { name: "Evaluate change" }));
+
+    await screen.findByText("Run #3", { exact: false });
+    const post = fetchMock.mock.calls.find(([, init]) => init?.method === "POST")!;
+    expect(JSON.parse(String(post[1]!.body)).testsPassed).toBe(false);
+  });
 });

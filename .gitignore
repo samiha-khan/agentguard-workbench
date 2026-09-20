@@ -5,3 +5,4 @@ frontend/*.tsbuildinfo
 .idea/
 .DS_Store
 *.iml
+src/main/resources/static/

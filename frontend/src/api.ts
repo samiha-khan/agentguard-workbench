@@ -33,7 +33,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     response = await fetch(`${BASE_URL}/api/evaluations${path}`, init);
   } catch {
-    throw new Error(`Could not reach the API at ${BASE_URL}. Is the backend running?`);
+    throw new Error(`Could not reach the API${BASE_URL ? ` at ${BASE_URL}` : ""}. Is the backend running?`);
   }
   if (!response.ok) {
     throw new Error(describeFailure(response.status));

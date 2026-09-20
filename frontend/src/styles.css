@@ -187,7 +187,9 @@ textarea {
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-size: 0.85rem;
   line-height: 1.5;
-  min-height: 170px;
+  min-height: 240px;
+  overflow: auto;
+  white-space: pre;
 }
 .check {
   align-items: center;
@@ -378,6 +380,10 @@ article p {
 .diff-file {
   color: #94a3b8;
   font-weight: 700;
+}
+.diff-hunk {
+  background: #0c4a6e55;
+  color: #7dd3fc;
 }
 .diff-add {
   background: #14532d66;

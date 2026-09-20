@@ -85,7 +85,7 @@ describe("App", () => {
     await screen.findByText(/No runs yet/);
     fireEvent.click(screen.getByRole("button", { name: "Leaked key" }));
 
-    expect((screen.getByLabelText(/Agent diff/) as HTMLTextAreaElement).value).toContain("api_key");
+    expect((screen.getByLabelText(/Agent diff/) as HTMLTextAreaElement).value).toContain("API_KEY");
   });
 
   it("sends the failing-tests example with the tests unchecked", async () => {

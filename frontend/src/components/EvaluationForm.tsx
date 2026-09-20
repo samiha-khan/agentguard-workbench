@@ -52,6 +52,7 @@ export function EvaluationForm({ loading, onSubmit }: Props) {
         <textarea
           className="code"
           name="diff"
+          wrap="off"
           required
           maxLength={20000}
           spellCheck={false}

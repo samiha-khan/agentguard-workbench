@@ -103,12 +103,13 @@ The frontend reads its API address from `VITE_API_URL` and defaults to `http://l
 
 ## Deploy a live demo
 
-The API runs anywhere that can run the `Dockerfile`, and the frontend is a static Vite build.
+The Docker image builds the React app and serves it from the Spring Boot server, so the whole application is one service on one URL.
 
-1. **API on Render:** choose New, then Blueprint, and select this repository. `render.yaml` creates a free Docker web service. When prompted, set `ALLOWED_ORIGINS` to the frontend's URL (separate several with commas).
-2. **Frontend on Vercel:** import the repository, set the Root Directory to `frontend`, and add the environment variable `VITE_API_URL` with the API's URL. Vercel detects `npm run build` and the `dist` output on its own.
+On Render, choose New, then Blueprint, and select this repository. `render.yaml` creates a free Docker web service, and the first build takes a few minutes. Any host that runs a Dockerfile works the same way.
 
 The default H2 database lives in memory, so demo data resets whenever the service restarts. Set `DATABASE_URL`, `DATABASE_USER`, and `DATABASE_PASSWORD` to point at MySQL for persistence. Free instances sleep when idle, so the first request after a pause can take up to a minute. Run history is visible to everyone who opens the demo, so do not paste private code into it.
+
+To run the same image locally, use `docker compose up --build` and open `http://localhost:8080`.
 
 ## Decisions and limitations
 

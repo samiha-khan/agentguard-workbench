@@ -8,7 +8,7 @@ I built it to explore a question I kept running into while using coding agents: 
 
 ![AgentGuard Workbench showing a BLOCKED verdict with its findings and run history](docs/screenshot.png)
 
-A change that adds a hard-coded key and edits a migration is blocked. Each finding and score deduction is listed, and every run is saved.
+A change that adds a hard-coded key is blocked. Each finding is listed with its severity, the diff is highlighted, and every run is saved. The example buttons load a clean change, a leaked key, an edited migration, and a failing test run.
 
 ## How it works
 
@@ -97,7 +97,7 @@ cd frontend && npm test && npm run build
 
 Backend (24 tests): every guardrail rule and its edge cases (removed lines are not flagged as added secrets, deleted protected files are caught, a test file is recognized by its path and not by the word "test"), the PASS / REVIEW / BLOCKED verdicts and scores, saving a run and reading it back, the 404 for an unknown run, request validation, and the CORS allow-list.
 
-Frontend (8 tests): the scorecard, the history list, a full submit-and-refresh flow, and the error paths for an unreachable or rejecting API.
+Frontend (12 tests): the scorecard and its finding order, the highlighted diff, the history list, the example buttons, a full submit-and-refresh flow, and the error paths for an unreachable or rejecting API.
 
 The frontend reads its API address from `VITE_API_URL` and defaults to `http://localhost:8080`.
 

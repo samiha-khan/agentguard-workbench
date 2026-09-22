@@ -68,4 +68,10 @@ describe("Scorecard details", () => {
     render(<Scorecard evaluation={blocked} diff={null} />);
     expect(screen.queryByText("Evaluated diff")).toBeNull();
   });
+
+  it("links to the pull request when a run has no local diff to show", () => {
+    render(<Scorecard evaluation={blocked} diff={null} prUrl="https://github.com/acme/widgets/pull/9" />);
+    const link = screen.getByText("View the pull request on GitHub ↗");
+    expect(link.closest("a")).toHaveProperty("href", "https://github.com/acme/widgets/pull/9");
+  });
 });

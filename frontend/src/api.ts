@@ -36,15 +36,24 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new Error(`Could not reach the API${BASE_URL ? ` at ${BASE_URL}` : ""}. Is the backend running?`);
   }
   if (!response.ok) {
-    throw new Error(describeFailure(response.status));
+    throw new Error(await describeFailure(response));
   }
   return (await response.json()) as T;
 }
 
-function describeFailure(status: number): string {
-  if (status === 400) return "The API rejected the request. Check that every field is filled in and within its length limit.";
-  if (status === 404) return "That run could not be found.";
-  return `The API returned an unexpected error (${status}).`;
+async function describeFailure(response: Response): Promise<string> {
+  try {
+    const body: unknown = await response.json();
+    if (body && typeof body === "object" && "error" in body && typeof body.error === "string" && body.error) {
+      return body.error;
+    }
+  } catch {
+    // The body wasn't JSON; fall through to a generic message for the status code.
+  }
+  if (response.status === 400) return "The API rejected the request. Check that every field is filled in and within its length limit.";
+  if (response.status === 404) return "That could not be found.";
+  if (response.status === 502) return "GitHub could not be reached. Try again in a moment.";
+  return `The API returned an unexpected error (${response.status}).`;
 }
 
 export function messageOf(error: unknown): string {
@@ -65,4 +74,12 @@ export function fetchHistory(): Promise<RunSummary[]> {
 
 export function fetchRun(id: number): Promise<Evaluation> {
   return request<Evaluation>(`/${id}`);
+}
+
+export function evaluatePullRequest(prUrl: string): Promise<Evaluation> {
+  return request<Evaluation>("/from-pr", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prUrl }),
+  });
 }

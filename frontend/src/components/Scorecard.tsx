@@ -34,7 +34,9 @@ function ScoreRing({ score, verdict }: { score: number; verdict: Verdict }) {
   );
 }
 
-export function Scorecard({ evaluation, diff }: { evaluation: Evaluation; diff?: string | null }) {
+type Props = { evaluation: Evaluation; diff?: string | null; prUrl?: string | null };
+
+export function Scorecard({ evaluation, diff, prUrl }: Props) {
   const findings = [...evaluation.findings].sort(
     (a, b) => SEVERITY_ORDER.indexOf(a.severity) - SEVERITY_ORDER.indexOf(b.severity),
   );
@@ -51,6 +53,7 @@ export function Scorecard({ evaluation, diff }: { evaluation: Evaluation; diff?:
         Run #{evaluation.id} · {formatTime(evaluation.createdAt)}
       </p>
       <h2>Guardrail findings</h2>
+      <p className="legend">Score starts at 100, then &minus;40 per blocker and &minus;10 per warning.</p>
       {findings.map((finding) => (
         <article key={finding.rule} className={finding.severity.toLowerCase()}>
           <b>{finding.severity}</b>
@@ -63,6 +66,13 @@ export function Scorecard({ evaluation, diff }: { evaluation: Evaluation; diff?:
           <h2>Evaluated diff</h2>
           <DiffView diff={diff} />
         </>
+      )}
+      {!diff && prUrl && (
+        <p className="pr-link">
+          <a href={prUrl} target="_blank" rel="noreferrer">
+            View the pull request on GitHub ↗
+          </a>
+        </p>
       )}
     </>
   );

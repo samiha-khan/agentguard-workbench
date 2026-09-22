@@ -94,14 +94,42 @@ body {
   margin: 0;
   padding: 0;
 }
-.checks li {
+.checks summary {
+  align-items: center;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
   font-size: 0.82rem;
   font-weight: 600;
+  gap: 6px;
+  list-style: none;
   padding: 6px 12px;
+}
+.checks summary::-webkit-details-marker {
+  display: none;
+}
+.checks summary::after {
+  color: var(--muted);
+  content: "?";
+  font-size: 0.72rem;
+}
+.checks details[open] summary {
+  background: #eef6f4;
+  border-color: var(--accent);
+}
+.checks details p {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  margin: 6px 0 0;
+  max-width: 240px;
+  padding: 8px 10px;
 }
 
 /* cards */
@@ -111,7 +139,10 @@ body {
   gap: 24px;
   grid-template-columns: 1.1fr 0.9fr;
 }
-form,
+form {
+  min-width: 0;
+}
+.panel,
 aside,
 .history {
   background: var(--card);
@@ -119,6 +150,38 @@ aside,
   border-radius: 16px;
   box-shadow: 0 1px 2px #0f172a0a, 0 12px 32px #0f172a0d;
   padding: 24px;
+}
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.tabs button {
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 4px 2px 10px;
+}
+.tabs button + button {
+  margin-left: 18px;
+}
+.tabs button.active {
+  border-bottom-color: var(--accent);
+  color: var(--ink);
+}
+.pr-link {
+  margin-top: 14px;
+}
+.pr-link a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.pr-link a:hover {
+  text-decoration: underline;
 }
 
 .grid > * {
@@ -159,6 +222,24 @@ label {
   font-size: 0.9rem;
   font-weight: 700;
   margin-bottom: 18px;
+}
+.field-hint {
+  color: var(--muted);
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: 4px;
+}
+.field-hint code {
+  background: #f1f5f9;
+  border-radius: 4px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  padding: 1px 5px;
+}
+.legend {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: -6px 0 10px;
 }
 input,
 textarea {

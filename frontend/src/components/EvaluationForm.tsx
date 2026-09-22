@@ -49,6 +49,7 @@ export function EvaluationForm({ loading, onSubmit }: Props) {
       </label>
       <label>
         Agent diff
+        <span className="field-hint">The change to review, in unified diff format (what <code>git diff</code> prints).</span>
         <textarea
           className="code"
           name="diff"

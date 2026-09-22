@@ -10,7 +10,7 @@ I built it to explore a question I kept running into while using coding agents: 
 
 ![AgentGuard Workbench showing a BLOCKED verdict with its findings and run history](docs/screenshot.png)
 
-A change that adds a hard-coded key is blocked. Each finding is listed with its severity, the diff is highlighted, and every run is saved. The example buttons load a clean change, a leaked key, an edited migration, and a failing test run.
+Paste a public GitHub pull request URL and AgentGuard fetches its diff and its latest check result directly from GitHub, no setup required. You can also paste a diff by hand, using the example buttons to see a clean change, a leaked key, an edited migration, and a failing test run. Every finding is listed with its severity, and every run is saved.
 
 ## How it works
 
@@ -79,6 +79,16 @@ docker compose up --build
 
 ## API example
 
+Evaluate a public GitHub pull request by URL. AgentGuard fetches its diff and its latest commit status from GitHub:
+
+```bash
+curl -X POST http://localhost:8080/api/evaluations/from-pr \
+  -H 'Content-Type: application/json' \
+  -d '{"prUrl": "https://github.com/spring-projects/spring-boot/pull/1"}'
+```
+
+Or evaluate a diff directly:
+
 ```bash
 curl -X POST http://localhost:8080/api/evaluations \
   -H 'Content-Type: application/json' \
@@ -90,6 +100,8 @@ curl -X POST http://localhost:8080/api/evaluations \
   }'
 ```
 
+`/from-pr` only accepts `https://github.com/owner/repo/pull/number` URLs, and only ever contacts `api.github.com`. Unauthenticated requests share GitHub's public rate limit (60/hour per IP); set `GITHUB_TOKEN` to a personal access token to raise that.
+
 ## Tests
 
 ```bash
@@ -97,9 +109,9 @@ mvn verify
 cd frontend && npm test && npm run build
 ```
 
-Backend (24 tests): every guardrail rule and its edge cases (removed lines are not flagged as added secrets, deleted protected files are caught, a test file is recognized by its path and not by the word "test"), the PASS / REVIEW / BLOCKED verdicts and scores, saving a run and reading it back, the 404 for an unknown run, request validation, and the CORS allow-list.
+Backend (37 tests): every guardrail rule and its edge cases (removed lines are not flagged as added secrets, deleted protected files are caught, a test file is recognized by its path and not by the word "test"), the PASS / REVIEW / BLOCKED verdicts and scores, saving a run and reading it back, the 404 for an unknown run, request validation, the CORS allow-list, and the GitHub pull-request client (its diff/title/status parsing and its 400/404/502 error mapping, mocked with `MockRestServiceServer` so the suite never calls the real GitHub API).
 
-Frontend (12 tests): the scorecard and its finding order, the highlighted diff, the history list, the example buttons, a full submit-and-refresh flow, and the error paths for an unreachable or rejecting API.
+Frontend (17 tests): the scorecard and its finding order, the highlighted diff, the history list, the example buttons, the pull-request form, a full submit-and-refresh flow for both the diff and pull-request paths, and the error paths for an unreachable, rejecting, or not-found API response.
 
 The frontend reads its API address from `VITE_API_URL` and defaults to `http://localhost:8080`.
 
@@ -116,16 +128,18 @@ To run the same image locally, use `docker compose up --build` and open `http://
 ## Decisions and limitations
 
 - Secret detection currently uses regular expressions. It is useful for obvious mistakes, but it does not replace a dedicated secret scanner.
-- Test status is supplied with the request. A later version should read verified results from CI.
+- Test status for a pasted diff is supplied with the request; for a pull request it comes from GitHub's combined commit-status API, which is populated by most CI setups but not one that only publishes check runs with no matching status.
 - JPA creates the local schema automatically. A deployed version should use versioned migrations.
 - The score represents policy violations. It does not predict whether the code contains a bug.
+- `/from-pr` only reads public repositories, since a private one needs the caller's own credentials, which this project does not collect or store.
 
 ## What I would add next
 
-- Read pull-request diffs and checks directly from GitHub.
-- Store policies in a repository configuration file.
+- Store policies in a repository configuration file, so protected paths and the size limit are per-repo instead of hard-coded.
+- Add rules aimed specifically at agent-shaped mistakes, such as a diff that deletes or disables a test to make it pass.
 - Compare acceptance criteria with changed behavior and report uncovered criteria.
 - Add per-rule test datasets and regression metrics.
+- Ship a GitHub Action so a pull request gets evaluated automatically, not just on request.
 
 ## License
 

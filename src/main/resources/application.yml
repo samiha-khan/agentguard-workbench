@@ -11,4 +11,5 @@ server:
   port: ${PORT:8080}
 agentguard:
   allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173}
+  github-token: ${GITHUB_TOKEN:}
 

@@ -13,14 +13,40 @@ import java.util.List;
 
 @Service
 public class EvaluationService {
+    private static final int MAX_TITLE = 200;
+    private static final int MAX_CRITERIA = 4000;
+    private static final int MAX_DIFF = 20000;
+
     private final GuardrailEngine guardrails;
     private final AgentRunRepository repository;
     private final ObjectMapper objectMapper;
+    private final GitHubPrClient gitHub;
 
-    public EvaluationService(GuardrailEngine guardrails, AgentRunRepository repository, ObjectMapper objectMapper) {
+    public EvaluationService(GuardrailEngine guardrails, AgentRunRepository repository, ObjectMapper objectMapper,
+                              GitHubPrClient gitHub) {
         this.guardrails = guardrails;
         this.repository = repository;
         this.objectMapper = objectMapper;
+        this.gitHub = gitHub;
+    }
+
+    public EvaluationResponse evaluateFromPr(String prUrl) {
+        GitHubPrClient.PullRequestDetails pr = gitHub.fetch(prUrl);
+        EvaluationRequest request = new EvaluationRequest(
+            truncate(orDefault(pr.title(), "Untitled pull request"), MAX_TITLE),
+            truncate(orDefault(pr.body(), "No description was provided in the pull request."), MAX_CRITERIA),
+            truncate(orDefault(pr.diffText(), ""), MAX_DIFF),
+            pr.testsPassed()
+        );
+        return evaluate(request);
+    }
+
+    private static String orDefault(String value, String fallback) {
+        return (value == null || value.isBlank()) ? fallback : value;
+    }
+
+    private static String truncate(String value, int max) {
+        return value.length() > max ? value.substring(0, max) : value;
     }
 
     public EvaluationResponse evaluate(EvaluationRequest request) {

@@ -15,6 +15,8 @@ public final class EvaluationModels {
         boolean testsPassed
     ) {}
 
+    public record PrEvaluationRequest(@NotBlank @Size(max = 500) String prUrl) {}
+
     public record Finding(String rule, Severity severity, String message) {}
     public enum Severity { INFO, WARNING, BLOCKER }
 

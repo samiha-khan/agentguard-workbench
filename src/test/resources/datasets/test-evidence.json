@@ -1,0 +1,58 @@
+[
+  {
+    "name": "only a non-test file is changed",
+    "diff": "+++ b/src/UserService.java\n+return user;",
+    "testsPassed": true,
+    "shouldFlag": true,
+    "why": "no path in the diff matches a recognized test file pattern"
+  },
+  {
+    "name": "multiple non-test files are changed",
+    "diff": "+++ b/src/UserService.java\n+return user;\n+++ b/src/OrderService.java\n+return order;",
+    "testsPassed": true,
+    "shouldFlag": true,
+    "why": "none of the changed paths match a test file pattern"
+  },
+  {
+    "name": "the word test appears inside added code but not in the path",
+    "diff": "+++ b/src/Version.java\n+String latestTest = \"1.2\"; // quick test of version bump",
+    "testsPassed": true,
+    "shouldFlag": true,
+    "why": "the rule matches on file paths, not on the word test appearing in code content"
+  },
+  {
+    "name": "a non-test file is deleted",
+    "diff": "--- a/src/Deprecated.java\n+++ /dev/null\n-class Deprecated {}",
+    "testsPassed": true,
+    "shouldFlag": true,
+    "why": "the deleted file's path does not match a test file pattern"
+  },
+  {
+    "name": "a Test.java suffixed file is changed",
+    "diff": "+++ b/src/UserServiceTest.java\n+assertThat(user);",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "the Test.java suffix is a recognized test file pattern"
+  },
+  {
+    "name": "a file under a __tests__ directory is changed",
+    "diff": "+++ b/web/__tests__/card.js\n+expect(card).toBeDefined();",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "the __tests__ directory is a recognized test file pattern"
+  },
+  {
+    "name": "a test_ prefixed python file is changed",
+    "diff": "+++ b/app/test_cards.py\n+def test_valid(): pass",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "the test_ prefix is a recognized python test file pattern"
+  },
+  {
+    "name": "a file is renamed into a test path",
+    "diff": "--- a/src/Foo.java\n+++ b/src/FooTest.java\n+assertThat(foo).isNotNull();",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "the new path after the rename matches the Test.java pattern"
+  }
+]

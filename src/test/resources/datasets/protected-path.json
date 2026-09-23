@@ -1,0 +1,58 @@
+[
+  {
+    "name": "workflow file is changed",
+    "diff": "--- a/.github/workflows/ci.yml\n+++ b/.github/workflows/ci.yml\n+  run: echo hello",
+    "testsPassed": true,
+    "shouldFlag": true,
+    "why": "changes under .github/workflows/ are always protected"
+  },
+  {
+    "name": "production infra config is changed",
+    "diff": "--- a/infra/production/app.yml\n+++ b/infra/production/app.yml\n+replicas: 5",
+    "testsPassed": true,
+    "shouldFlag": true,
+    "why": "infra/production/ is one of the protected prefixes"
+  },
+  {
+    "name": "a database migration file is deleted",
+    "diff": "--- a/db/migrations/V2__seed.sql\n+++ /dev/null\n-insert into runs (id) values (1);",
+    "testsPassed": true,
+    "shouldFlag": true,
+    "why": "deleting a file under db/migrations/ still touches a protected path"
+  },
+  {
+    "name": "a protected file is renamed out to a plain path",
+    "diff": "--- a/infra/production/old-config.yml\n+++ b/config/new-config.yml\n+timeout: 30",
+    "testsPassed": true,
+    "shouldFlag": true,
+    "why": "the old path is still a protected production path even though the file moved elsewhere"
+  },
+  {
+    "name": "an ordinary source file is changed",
+    "diff": "--- a/src/App.java\n+++ b/src/App.java\n+return ok;",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "src/App.java does not start with any protected prefix"
+  },
+  {
+    "name": "path contains the word production but is not under infra/production/",
+    "diff": "--- a/src/production-report.js\n+++ b/src/production-report.js\n+console.log('report');",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "the protected-path check matches a prefix, not a substring anywhere in the path"
+  },
+  {
+    "name": "path contains the word migrations but is not under db/migrations/",
+    "diff": "--- a/scripts/migrations/tool.py\n+++ b/scripts/migrations/tool.py\n+print('run')",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "scripts/migrations/ is a different directory than the protected db/migrations/ prefix"
+  },
+  {
+    "name": "a file is renamed between two ordinary paths",
+    "diff": "--- a/src/Old.java\n+++ b/src/New.java\n+class New {}",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "neither the old nor the new path is protected"
+  }
+]

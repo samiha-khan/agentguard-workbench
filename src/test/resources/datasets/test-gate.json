@@ -1,0 +1,58 @@
+[
+  {
+    "name": "tests failed on a plain feature diff",
+    "diff": "+++ b/src/Feature.java\n+public void feature() {}",
+    "testsPassed": false,
+    "shouldFlag": true,
+    "why": "a failing test suite always blocks, regardless of what the diff contains"
+  },
+  {
+    "name": "tests failed while also touching a protected path",
+    "diff": "+++ b/infra/production/app.yml\n+replicas: 3",
+    "testsPassed": false,
+    "shouldFlag": true,
+    "why": "the test-gate rule reacts only to testsPassed, not to what else the diff touches"
+  },
+  {
+    "name": "tests failed on an empty diff",
+    "diff": "",
+    "testsPassed": false,
+    "shouldFlag": true,
+    "why": "an empty diff does not exempt the change from a failing test suite"
+  },
+  {
+    "name": "tests failed even though a test file is included",
+    "diff": "+++ b/src/FeatureTest.java\n+assertThat(false).isTrue();",
+    "testsPassed": false,
+    "shouldFlag": true,
+    "why": "including a test file does not matter if the submitted suite did not pass"
+  },
+  {
+    "name": "tests passed on a plain feature diff",
+    "diff": "+++ b/src/Feature.java\n+public void feature() {}",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "a passing test suite is only reported as info, not a block"
+  },
+  {
+    "name": "tests passed even though the diff contains a secret",
+    "diff": "+++ b/src/Config.java\n+api_key = \"sk_live_1234567890abcdef\"",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "the test-gate rule itself does not react to secrets, only to testsPassed"
+  },
+  {
+    "name": "tests passed on an empty diff",
+    "diff": "",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "there is nothing in the diff that would turn a passing suite into a block"
+  },
+  {
+    "name": "tests passed on a large diff over the change-size threshold",
+    "diff": "+++ b/src/Big.java\n+int v0 = 0;\n+int v1 = 1;\n+int v2 = 2;\n+int v3 = 3;\n+int v4 = 4;\n+int v5 = 5;\n+int v6 = 6;\n+int v7 = 7;\n+int v8 = 8;\n+int v9 = 9;\n+int v10 = 10;\n+int v11 = 11;\n+int v12 = 12;\n+int v13 = 13;\n+int v14 = 14;\n+int v15 = 15;\n+int v16 = 16;\n+int v17 = 17;\n+int v18 = 18;\n+int v19 = 19;\n+int v20 = 20;\n+int v21 = 21;\n+int v22 = 22;\n+int v23 = 23;\n+int v24 = 24;\n+int v25 = 25;\n+int v26 = 26;\n+int v27 = 27;\n+int v28 = 28;\n+int v29 = 29;\n+int v30 = 30;\n+int v31 = 31;\n+int v32 = 32;\n+int v33 = 33;\n+int v34 = 34;\n+int v35 = 35;\n+int v36 = 36;\n+int v37 = 37;\n+int v38 = 38;\n+int v39 = 39;\n+int v40 = 40;\n+int v41 = 41;\n+int v42 = 42;\n+int v43 = 43;\n+int v44 = 44;\n+int v45 = 45;\n+int v46 = 46;\n+int v47 = 47;\n+int v48 = 48;\n+int v49 = 49;\n+int v50 = 50;\n+int v51 = 51;\n+int v52 = 52;\n+int v53 = 53;\n+int v54 = 54;\n+int v55 = 55;\n+int v56 = 56;\n+int v57 = 57;\n+int v58 = 58;\n+int v59 = 59;\n+int v60 = 60;\n+int v61 = 61;\n+int v62 = 62;\n+int v63 = 63;\n+int v64 = 64;\n+int v65 = 65;\n+int v66 = 66;\n+int v67 = 67;\n+int v68 = 68;\n+int v69 = 69;\n+int v70 = 70;\n+int v71 = 71;\n+int v72 = 72;\n+int v73 = 73;\n+int v74 = 74;\n+int v75 = 75;\n+int v76 = 76;\n+int v77 = 77;\n+int v78 = 78;\n+int v79 = 79;\n+int v80 = 80;\n+int v81 = 81;\n+int v82 = 82;\n+int v83 = 83;\n+int v84 = 84;\n+int v85 = 85;\n+int v86 = 86;\n+int v87 = 87;\n+int v88 = 88;\n+int v89 = 89;\n+int v90 = 90;\n+int v91 = 91;\n+int v92 = 92;\n+int v93 = 93;\n+int v94 = 94;\n+int v95 = 95;\n+int v96 = 96;\n+int v97 = 97;\n+int v98 = 98;\n+int v99 = 99;\n+int v100 = 100;\n+int v101 = 101;\n+int v102 = 102;\n+int v103 = 103;\n+int v104 = 104;\n+int v105 = 105;\n+int v106 = 106;\n+int v107 = 107;\n+int v108 = 108;\n+int v109 = 109;\n+int v110 = 110;\n+int v111 = 111;\n+int v112 = 112;\n+int v113 = 113;\n+int v114 = 114;\n+int v115 = 115;\n+int v116 = 116;\n+int v117 = 117;\n+int v118 = 118;\n+int v119 = 119;\n+int v120 = 120;\n+int v121 = 121;\n+int v122 = 122;\n+int v123 = 123;\n+int v124 = 124;\n+int v125 = 125;\n+int v126 = 126;\n+int v127 = 127;\n+int v128 = 128;\n+int v129 = 129;\n+int v130 = 130;\n+int v131 = 131;\n+int v132 = 132;\n+int v133 = 133;\n+int v134 = 134;\n+int v135 = 135;\n+int v136 = 136;\n+int v137 = 137;\n+int v138 = 138;\n+int v139 = 139;\n+int v140 = 140;\n+int v141 = 141;\n+int v142 = 142;\n+int v143 = 143;\n+int v144 = 144;\n+int v145 = 145;\n+int v146 = 146;\n+int v147 = 147;\n+int v148 = 148;\n+int v149 = 149;\n+int v150 = 150;\n+int v151 = 151;\n+int v152 = 152;\n+int v153 = 153;\n+int v154 = 154;\n+int v155 = 155;\n+int v156 = 156;\n+int v157 = 157;\n+int v158 = 158;\n+int v159 = 159;\n+int v160 = 160;\n+int v161 = 161;\n+int v162 = 162;\n+int v163 = 163;\n+int v164 = 164;\n+int v165 = 165;\n+int v166 = 166;\n+int v167 = 167;\n+int v168 = 168;\n+int v169 = 169;\n+int v170 = 170;\n+int v171 = 171;\n+int v172 = 172;\n+int v173 = 173;\n+int v174 = 174;\n+int v175 = 175;\n+int v176 = 176;\n+int v177 = 177;\n+int v178 = 178;\n+int v179 = 179;\n+int v180 = 180;\n+int v181 = 181;\n+int v182 = 182;\n+int v183 = 183;\n+int v184 = 184;\n+int v185 = 185;\n+int v186 = 186;\n+int v187 = 187;\n+int v188 = 188;\n+int v189 = 189;\n+int v190 = 190;\n+int v191 = 191;\n+int v192 = 192;\n+int v193 = 193;\n+int v194 = 194;\n+int v195 = 195;\n+int v196 = 196;\n+int v197 = 197;\n+int v198 = 198;\n+int v199 = 199;\n+int v200 = 200;\n+int v201 = 201;\n+int v202 = 202;\n+int v203 = 203;\n+int v204 = 204;\n+int v205 = 205;\n+int v206 = 206;\n+int v207 = 207;\n+int v208 = 208;\n+int v209 = 209;\n+int v210 = 210;\n+int v211 = 211;\n+int v212 = 212;\n+int v213 = 213;\n+int v214 = 214;\n+int v215 = 215;\n+int v216 = 216;\n+int v217 = 217;\n+int v218 = 218;\n+int v219 = 219;\n+int v220 = 220;\n+int v221 = 221;\n+int v222 = 222;\n+int v223 = 223;\n+int v224 = 224;\n+int v225 = 225;\n+int v226 = 226;\n+int v227 = 227;\n+int v228 = 228;\n+int v229 = 229;\n+int v230 = 230;\n+int v231 = 231;\n+int v232 = 232;\n+int v233 = 233;\n+int v234 = 234;\n+int v235 = 235;\n+int v236 = 236;\n+int v237 = 237;\n+int v238 = 238;\n+int v239 = 239;\n+int v240 = 240;\n+int v241 = 241;\n+int v242 = 242;\n+int v243 = 243;\n+int v244 = 244;\n+int v245 = 245;\n+int v246 = 246;\n+int v247 = 247;\n+int v248 = 248;\n+int v249 = 249;\n+int v250 = 250;\n+int v251 = 251;\n+int v252 = 252;\n+int v253 = 253;\n+int v254 = 254;\n+int v255 = 255;\n+int v256 = 256;\n+int v257 = 257;\n+int v258 = 258;\n+int v259 = 259;\n+int v260 = 260;\n+int v261 = 261;\n+int v262 = 262;\n+int v263 = 263;\n+int v264 = 264;\n+int v265 = 265;\n+int v266 = 266;\n+int v267 = 267;\n+int v268 = 268;\n+int v269 = 269;\n+int v270 = 270;\n+int v271 = 271;\n+int v272 = 272;\n+int v273 = 273;\n+int v274 = 274;\n+int v275 = 275;\n+int v276 = 276;\n+int v277 = 277;\n+int v278 = 278;\n+int v279 = 279;\n+int v280 = 280;\n+int v281 = 281;\n+int v282 = 282;\n+int v283 = 283;\n+int v284 = 284;\n+int v285 = 285;\n+int v286 = 286;\n+int v287 = 287;\n+int v288 = 288;\n+int v289 = 289;\n+int v290 = 290;\n+int v291 = 291;\n+int v292 = 292;\n+int v293 = 293;\n+int v294 = 294;\n+int v295 = 295;\n+int v296 = 296;\n+int v297 = 297;\n+int v298 = 298;\n+int v299 = 299;\n+int v300 = 300;\n+int v301 = 301;\n+int v302 = 302;\n+int v303 = 303;\n+int v304 = 304;\n+int v305 = 305;\n+int v306 = 306;\n+int v307 = 307;\n+int v308 = 308;\n+int v309 = 309;\n+int v310 = 310;\n+int v311 = 311;\n+int v312 = 312;\n+int v313 = 313;\n+int v314 = 314;\n+int v315 = 315;\n+int v316 = 316;\n+int v317 = 317;\n+int v318 = 318;\n+int v319 = 319;\n+int v320 = 320;\n+int v321 = 321;\n+int v322 = 322;\n+int v323 = 323;\n+int v324 = 324;\n+int v325 = 325;\n+int v326 = 326;\n+int v327 = 327;\n+int v328 = 328;\n+int v329 = 329;\n+int v330 = 330;\n+int v331 = 331;\n+int v332 = 332;\n+int v333 = 333;\n+int v334 = 334;\n+int v335 = 335;\n+int v336 = 336;\n+int v337 = 337;\n+int v338 = 338;\n+int v339 = 339;\n+int v340 = 340;\n+int v341 = 341;\n+int v342 = 342;\n+int v343 = 343;\n+int v344 = 344;\n+int v345 = 345;\n+int v346 = 346;\n+int v347 = 347;\n+int v348 = 348;\n+int v349 = 349;",
+    "testsPassed": true,
+    "shouldFlag": false,
+    "why": "the test-gate rule does not react to change size, only to testsPassed"
+  }
+]

@@ -111,7 +111,7 @@ cd frontend && npm test && npm run build
 
 Backend (37 tests): every guardrail rule and its edge cases (removed lines are not flagged as added secrets, deleted protected files are caught, a test file is recognized by its path and not by the word "test"), the PASS / REVIEW / BLOCKED verdicts and scores, saving a run and reading it back, the 404 for an unknown run, request validation, the CORS allow-list, and the GitHub pull-request client (its diff/title/status parsing and its 400/404/502 error mapping, mocked with `MockRestServiceServer` so the suite never calls the real GitHub API).
 
-## Validated against real pull requests
+## Checked against 7 real, currently-merged pull requests
 
 The 40 dataset-driven tests above run against hand-written example diffs, which proves the rules are implemented correctly but not that they hold up on a diff GitHub actually produced. `RealPullRequestDatasetTest` closes that gap: it fetches real, currently-merged pull requests from `expressjs/express` and `pallets/flask` (two widely used, actively maintained libraries) through the same `GitHubPrClient` the live demo uses, and checks the engine's real output against labels derived by hand from each PR's actual changed files.
 

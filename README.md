@@ -111,6 +111,22 @@ cd frontend && npm test && npm run build
 
 Backend (37 tests): every guardrail rule and its edge cases (removed lines are not flagged as added secrets, deleted protected files are caught, a test file is recognized by its path and not by the word "test"), the PASS / REVIEW / BLOCKED verdicts and scores, saving a run and reading it back, the 404 for an unknown run, request validation, the CORS allow-list, and the GitHub pull-request client (its diff/title/status parsing and its 400/404/502 error mapping, mocked with `MockRestServiceServer` so the suite never calls the real GitHub API).
 
+## Validated against real pull requests
+
+The 40 dataset-driven tests above run against hand-written example diffs, which proves the rules are implemented correctly but not that they hold up on a diff GitHub actually produced. `RealPullRequestDatasetTest` closes that gap: it fetches real, currently-merged pull requests from `expressjs/express` and `pallets/flask` (two widely used, actively maintained libraries) through the same `GitHubPrClient` the live demo uses, and checks the engine's real output against labels derived by hand from each PR's actual changed files.
+
+Result: 21/21 correct across 7 real PRs and 3 rules (protected-path, change-size, test-evidence). That includes catching an unmodified Dependabot GitHub Actions bump in both repos (protected-path), a 579-line release-prep PR (change-size), and distinguishing PRs that touched `tests/` from ones that didn't.
+
+Two rules are intentionally not in this real-PR set:
+- `secret-scan`: finding a real merged PR that trips this regex would mean searching for an actual leaked credential in a stranger's repository, which this project won't do even if the key was later revoked. Covered by the synthetic dataset only.
+- `test-gate`: GitHub's combined commit status for an old PR can change or expire independently of what the code looked like at merge time, which would make the dataset non-reproducible through no fault of the engine. Also covered by the synthetic dataset only.
+
+Opt-in, not part of CI (network calls to a live external API have no place in a required status check):
+
+```bash
+GITHUB_TOKEN=$(gh auth token) AGENTGUARD_RUN_REAL_PR_BENCHMARK=true mvn test -Dtest=RealPullRequestDatasetTest
+```
+
 Frontend (17 tests): the scorecard and its finding order, the highlighted diff, the history list, the example buttons, the pull-request form, a full submit-and-refresh flow for both the diff and pull-request paths, and the error paths for an unreachable, rejecting, or not-found API response.
 
 The frontend reads its API address from `VITE_API_URL` and defaults to `http://localhost:8080`.
@@ -138,7 +154,7 @@ To run the same image locally, use `docker compose up --build` and open `http://
 - Store policies in a repository configuration file, so protected paths and the size limit are per-repo instead of hard-coded.
 - Add rules aimed specifically at agent-shaped mistakes, such as a diff that deletes or disables a test to make it pass.
 - Compare acceptance criteria with changed behavior and report uncovered criteria.
-- Add per-rule test datasets and regression metrics.
+- Extend the real-PR dataset past 7 PRs and 2 repos, and add secret-scan coverage using a security tool's own intentional test fixtures instead of a real leak.
 - Ship a GitHub Action so a pull request gets evaluated automatically, not just on request.
 
 ## License

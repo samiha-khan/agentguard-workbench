@@ -1,0 +1,37 @@
+[
+  {
+    "prUrl": "https://github.com/expressjs/express/pull/7462",
+    "description": "bump 5 GitHub Actions workflow dependencies (Dependabot)",
+    "expected": {"protected-path": true, "change-size": false, "test-evidence": true}
+  },
+  {
+    "prUrl": "https://github.com/expressjs/express/pull/7426",
+    "description": "docs: fix capitalization of GitHub Discussions in Readme",
+    "expected": {"protected-path": false, "change-size": false, "test-evidence": true}
+  },
+  {
+    "prUrl": "https://github.com/expressjs/express/pull/7037",
+    "description": "include edge case tests for res.type()",
+    "expected": {"protected-path": false, "change-size": false, "test-evidence": false}
+  },
+  {
+    "prUrl": "https://github.com/expressjs/express/pull/7466",
+    "description": "4.22.3 release: History.md + package.json version bump, 579 additions",
+    "expected": {"protected-path": false, "change-size": true, "test-evidence": true}
+  },
+  {
+    "prUrl": "https://github.com/expressjs/express/pull/6894",
+    "description": "test: add test for normalizeType fallback when mime lookup fails",
+    "expected": {"protected-path": false, "change-size": false, "test-evidence": false}
+  },
+  {
+    "prUrl": "https://github.com/pallets/flask/pull/4959",
+    "description": "Bump actions/cache from 3.2.3 to 3.2.4 (Dependabot)",
+    "expected": {"protected-path": true, "change-size": false, "test-evidence": true}
+  },
+  {
+    "prUrl": "https://github.com/pallets/flask/pull/5111",
+    "description": "update tests: src/flask/scaffold.py plus four files under tests/",
+    "expected": {"protected-path": false, "change-size": false, "test-evidence": false}
+  }
+]
